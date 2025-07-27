@@ -35,6 +35,9 @@ class SelectorConfig {
 
   /// Use safe area for selectorType=BOTTOM_SHEET
   final bool useBottomSheetSafeArea;
+  final Widget? trailingWidget;
+  final String locale;
+  final String cancelText, doneText;
 
   const SelectorConfig({
     this.selectorType = PhoneInputSelectorType.DROPDOWN,
@@ -45,5 +48,9 @@ class SelectorConfig {
     this.leadingPadding,
     this.trailingSpace = true,
     this.useBottomSheetSafeArea = false,
+    this.trailingWidget,
+    this.locale = 'en',
+    this.cancelText = 'cancel',
+    this.doneText = 'done',
   });
 }

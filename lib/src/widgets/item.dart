@@ -11,6 +11,8 @@ class Item extends StatelessWidget {
   final bool withCountryNames;
   final double? leadingPadding;
   final bool trailingSpace;
+  final Widget? trailingWidget;
+  final String locale;
 
   const Item({
     Key? key,
@@ -21,6 +23,8 @@ class Item extends StatelessWidget {
     this.withCountryNames = false,
     this.leadingPadding = 12,
     this.trailingSpace = true,
+    this.trailingWidget,
+    this.locale = 'en',
   }) : super(key: key);
 
   @override
@@ -29,22 +33,39 @@ class Item extends StatelessWidget {
     if (trailingSpace) {
       dialCode = dialCode.padRight(5, "   ");
     }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        SizedBox(width: leadingPadding),
-        _Flag(
-          country: country,
-          showFlag: showFlag,
-          useEmoji: useEmoji,
-        ),
-        const SizedBox(width: 12.0),
-        Text(
-          dialCode,
-          textDirection: TextDirection.ltr,
-          style: textStyle,
-        ),
-      ],
+    return IntrinsicHeight(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (showFlag ?? true) ...[
+            SizedBox(width: leadingPadding),
+            _Flag(
+              country: country,
+              showFlag: showFlag,
+              useEmoji: useEmoji,
+            ),
+          ],
+          const SizedBox(width: 12.0),
+          Text(
+            dialCode,
+            textDirection: TextDirection.ltr,
+            style: textStyle,
+          ),
+          if (trailingWidget != null) ...[
+            trailingWidget!,
+          ],
+          if (withCountryNames &&
+              (country!.nameTranslations?[locale] != null ||
+                  country?.name != null)) ...[
+            const SizedBox(width: 12.0),
+            Text(
+              country!.nameTranslations?[locale] ?? country?.name ?? '',
+              textDirection: TextDirection.ltr,
+              style: textStyle,
+            ),
+          ]
+        ],
+      ),
     );
   }
 }

@@ -6,9 +6,10 @@ import 'package:intl_phone_number_input/src/widgets/countries_search_list_widget
 import 'package:intl_phone_number_input/src/widgets/input_widget.dart';
 import 'package:intl_phone_number_input/src/widgets/item.dart';
 
+import 'show_cupertino_modal_popup.dart';
+
 /// [SelectorButton]
 class SelectorButton extends StatelessWidget {
-
   const SelectorButton({
     super.key,
     required this.countries,
@@ -73,6 +74,25 @@ class SelectorButton extends StatelessWidget {
                         PhoneInputSelectorType.BOTTOM_SHEET) {
                       selected = await showCountrySelectorBottomSheet(
                           context, countries);
+                    } else if (selectorConfig.selectorType ==
+                        PhoneInputSelectorType.CUPERTINO_PICKER) {
+                      selected = await showCustomCupertinoModalPopup(
+                        context,
+                        items: countries,
+                        cancelText: selectorConfig.cancelText,
+                        doneText: selectorConfig.doneText,
+                        itemChildBuilder: (country) => Item(
+                          country: country,
+                          showFlag: true,
+                          withCountryNames: true,
+                          useEmoji: selectorConfig.useEmoji,
+                          leadingPadding: selectorConfig.leadingPadding,
+                          trailingSpace: selectorConfig.trailingSpace,
+                          textStyle: selectorTextStyle,
+                          locale: selectorConfig.locale,
+                        ),
+                        currentItem: country,
+                      );
                     } else {
                       selected =
                           await showCountrySelectorDialog(context, countries);
@@ -92,6 +112,7 @@ class SelectorButton extends StatelessWidget {
                 leadingPadding: selectorConfig.leadingPadding,
                 trailingSpace: selectorConfig.trailingSpace,
                 textStyle: selectorTextStyle,
+                trailingWidget: selectorConfig.trailingWidget,
               ),
             ),
           );
